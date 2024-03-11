@@ -50,7 +50,7 @@ char ToEnglishAlpha(char ch)
         correctedChar = 'i';
     else if (ch == 'é')
         correctedChar = 'e';
-    else if (ch == 'ü' || ch == 'ű' || ch == 'û')
+    else if (ch == 'ü' || ch == 'ű' || ch == 'û' || ch == 'ú')
         correctedChar = 'u';
 
     return correctedChar;
