@@ -5,6 +5,10 @@
 #include <filesystem>
 #include <codecvt>
 #include <unordered_map>
+#include <ranges>
+#include <algorithm>
+#include <vector>
+#include <utility>
 
 
 // less typing its fine in a cpp file
@@ -13,16 +17,10 @@ using FrequencyMap = std::unordered_map<char, int>;
 
 std::optional<std::string> ReadFile(const std::filesystem::path& filepath)
 {
-    if (!std::filesystem::exists(filepath))
-    {
-        std::cerr << "Error: File " << filepath << " does not exist." << std::endl;
-        return {};
-    }
-
     std::ifstream file(filepath);
     if (!file.is_open())
     {
-        std::cerr << "Error: Unable to open file " << filepath << std::endl;
+        std::cout << "Error: Unable to open file " << filepath << std::endl;
         return {};
     }
 
@@ -79,9 +77,20 @@ FrequencyMap GetLetterFrequencies(const std::string& content)
 
 void PrintFrequencies(const FrequencyMap& freq)
 {
+    std::vector<std::pair<char, int>> freqVector;
+
     for (const auto& [key, value] : freq)
     {
-        std::cout << key << " - " << value << std::endl;
+        freqVector.push_back({ key, value });
+    }
+
+    std::ranges::sort(freqVector, [](const auto& a, const auto& b) {
+        return a.second > b.second;
+    });
+
+    for (const auto& [ch, freq] : freqVector)
+    {
+        std::cout << ch << " - " << freq << std::endl;
     }
 }
 
@@ -97,6 +106,6 @@ int main()
     }
     else
     {
-        std::cout << "Couldn't Read file" << std::endl;
+        std::cerr << "Couldn't Read file" << std::endl;
     }
 }
